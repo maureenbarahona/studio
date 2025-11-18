@@ -15,7 +15,7 @@ import {addDays, format, endOfDay} from 'date-fns';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {Calendar} from '@/components/ui/calendar';
 import {cn} from '@/lib/utils';
-import {accounts, locations, transactions} from '@/lib/data';
+import {accounts, locations, transactions, currencies} from '@/lib/data';
 import {useState} from 'react';
 import type {Transaction} from '@/lib/types';
 import {ReportsChart} from './reports-chart';
@@ -66,6 +66,7 @@ export default function ReportesPage() {
       'Localidad',
       'Tipo',
       'Monto',
+      'Moneda',
       'Descripción',
       'Cuenta Origen',
       'Cuenta Destino',
@@ -77,6 +78,7 @@ export default function ReportesPage() {
       locations.find((l) => l.id === tx.locationId)?.name || '',
       transactionTypeMap[tx.type] || tx.type,
       tx.amount,
+      currencies.find((c) => c.id === tx.currencyId)?.code || '',
       `"${tx.description.replace(/"/g, '""')}"`,
       accounts.find((a) => a.id === tx.sourceAccountId)?.name || '',
       accounts.find((a) => a.id === tx.destinationAccountId)?.name || '',

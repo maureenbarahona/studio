@@ -15,6 +15,7 @@ export interface Transaction {
   locationId: string;
   type: TransactionType;
   amount: number;
+  currencyId: string;
   description: string;
   sourceAccountId?: string;
   destinationAccountId?: string;
@@ -29,12 +30,14 @@ export interface BankAccount {
   bankName: string;
   accountNumber: string;
   balance: number;
+  currencyId: string;
 }
 
 export interface Location {
   id: string;
   name: string;
   cashBalance: number;
+  currencyId: string;
 }
 
 export interface TransactionStatus {
@@ -56,6 +59,13 @@ export interface User {
   role: string; // Corresponds to UserRole.id
   status: 'active' | 'inactive';
   password?: string;
+}
+
+export interface Currency {
+    id: string;
+    name: string;
+    symbol: string;
+    code: string; // ISO 4217 code
 }
 
 export interface AppConfig {

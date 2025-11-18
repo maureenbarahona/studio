@@ -2,7 +2,7 @@
 
 import type {ColumnDef} from '@tanstack/react-table';
 import type {Transaction} from '@/lib/types';
-import {accounts, locations, transactionStatuses, users} from '@/lib/data';
+import {accounts, locations, transactionStatuses, users, currencies} from '@/lib/data';
 import {formatCurrency} from '@/lib/utils';
 import {Badge} from '@/components/ui/badge';
 import {
@@ -61,9 +61,18 @@ export const columns: ColumnDef<Transaction>[] = [
     header: () => <div className="text-right">Monto</div>,
     cell: ({row}) => {
       const amount = parseFloat(row.getValue('amount'));
+      const currency = currencies.find(c => c.id === row.original.currencyId);
       return (
-        <div className="text-right font-medium">{formatCurrency(amount)}</div>
+        <div className="text-right font-medium">{formatCurrency(amount, currency?.code)}</div>
       );
+    },
+  },
+  {
+    accessorKey: 'currencyId',
+    header: 'Moneda',
+    cell: ({ row }) => {
+      const currency = currencies.find(c => c.id === row.getValue('currencyId'));
+      return currency?.code ?? 'N/A';
     },
   },
   {

@@ -5,6 +5,7 @@ import type {
   User,
   TransactionStatus,
   UserRole,
+  Currency,
 } from './types';
 import type { Country } from './config-types';
 
@@ -26,11 +27,15 @@ export const transactionStatuses: TransactionStatus[] = [
   {id: 'status3', name: 'Anulada', description: 'La transacción ha sido cancelada.'},
 ];
 
+export const currencies: Currency[] = [
+  { id: 'curr1', name: 'Lempira', code: 'HNL', symbol: 'L' },
+  { id: 'curr2', name: 'Dólar Estadounidense', code: 'USD', symbol: '$' },
+];
 
 export const locations: Location[] = [
-  {id: 'loc1', name: 'Agencia Central', cashBalance: 15000.75},
-  {id: 'loc2', name: 'Sucursal Norte', cashBalance: 9850.0},
-  {id: 'loc3', name: 'Punto Sur', cashBalance: 12345.5},
+  {id: 'loc1', name: 'Agencia Central', cashBalance: 15000.75, currencyId: 'curr1'},
+  {id: 'loc2', name: 'Sucursal Norte', cashBalance: 9850.0, currencyId: 'curr1'},
+  {id: 'loc3', name: 'Punto Sur', cashBalance: 12345.5, currencyId: 'curr1'},
 ];
 
 export const accounts: BankAccount[] = [
@@ -40,6 +45,7 @@ export const accounts: BankAccount[] = [
     bankName: 'BAC Credomatic',
     accountNumber: '123-456-789',
     balance: 150000.0,
+    currencyId: 'curr1',
   },
   {
     id: 'acc2',
@@ -47,6 +53,7 @@ export const accounts: BankAccount[] = [
     bankName: 'Banco Ficohsa',
     accountNumber: '987-654-321',
     balance: 275000.5,
+    currencyId: 'curr1',
   },
   {
     id: 'acc3',
@@ -54,6 +61,15 @@ export const accounts: BankAccount[] = [
     bankName: 'Banco Atlantida',
     accountNumber: '555-123-888',
     balance: 85000.25,
+    currencyId: 'curr1',
+  },
+  {
+    id: 'acc4',
+    name: 'BAC Credomatic Dólares',
+    bankName: 'BAC Credomatic',
+    accountNumber: '123-456-790',
+    balance: 5000.0,
+    currencyId: 'curr2',
   },
 ];
 
@@ -65,6 +81,7 @@ export const transactions: Transaction[] = [
     locationId: 'loc1',
     type: 'deposito',
     amount: 5000,
+    currencyId: 'curr1',
     description: 'Depósito de cliente',
     destinationAccountId: 'acc1',
     userId: 'user1',
@@ -77,6 +94,7 @@ export const transactions: Transaction[] = [
     locationId: 'loc2',
     type: 'pago_proveedor',
     amount: 2500,
+    currencyId: 'curr1',
     description: 'Pago a proveedor de limpieza',
     sourceAccountId: 'acc2',
     userId: 'user2',
@@ -89,6 +107,7 @@ export const transactions: Transaction[] = [
     locationId: 'loc1',
     type: 'retiro',
     amount: 1000,
+    currencyId: 'curr1',
     description: 'Retiro para caja chica',
     sourceAccountId: 'acc1',
     userId: 'user1',
@@ -101,6 +120,7 @@ export const transactions: Transaction[] = [
     locationId: 'loc3',
     type: 'ingreso_caja',
     amount: 300,
+    currencyId: 'curr1',
     description: 'Venta de servicio #123',
     userId: 'user1',
     statusId: 'status1',
@@ -112,6 +132,7 @@ export const transactions: Transaction[] = [
     locationId: 'loc1',
     type: 'transferencia',
     amount: 10000,
+    currencyId: 'curr1',
     description: 'Transferencia de fondos a Ficohsa',
     sourceAccountId: 'acc1',
     destinationAccountId: 'acc2',
@@ -125,6 +146,7 @@ export const transactions: Transaction[] = [
     locationId: 'loc2',
     type: 'gasto_caja',
     amount: 150.5,
+    currencyId: 'curr1',
     description: 'Compra de papelería',
     userId: 'user2',
     statusId: 'status1',
@@ -136,6 +158,7 @@ export const transactions: Transaction[] = [
     locationId: 'loc3',
     type: 'deposito',
     amount: 7500,
+    currencyId: 'curr1',
     description: 'Depósito de ventas del día',
     destinationAccountId: 'acc3',
     userId: 'user1',
@@ -148,6 +171,7 @@ export const transactions: Transaction[] = [
     locationId: 'loc1',
     type: 'otro',
     amount: 550,
+    currencyId: 'curr1',
     description: 'Ajuste de sistema',
     userId: 'user1',
     statusId: 'status1',

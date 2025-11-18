@@ -14,7 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {Badge} from '@/components/ui/badge';
-import {transactions} from '@/lib/data';
+import {transactions, currencies} from '@/lib/data';
 import {formatCurrency} from '@/lib/utils';
 
 const transactionTypeMap: Record<string, string> = {
@@ -59,7 +59,9 @@ export function RecentTransactions() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {recentTransactions.map((tx) => (
+            {recentTransactions.map((tx) => {
+              const currency = currencies.find(c => c.id === tx.currencyId);
+              return (
               <TableRow key={tx.id}>
                 <TableCell className="font-medium">{tx.description}</TableCell>
                 <TableCell>
@@ -67,10 +69,10 @@ export function RecentTransactions() {
                     {transactionTypeMap[tx.type]}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right">{formatCurrency(tx.amount)}</TableCell>
+                <TableCell className="text-right">{formatCurrency(tx.amount, currency?.code)}</TableCell>
                 <TableCell>{tx.date.toLocaleDateString('es-HN')}</TableCell>
               </TableRow>
-            ))}
+            )})}
           </TableBody>
         </Table>
       </CardContent>

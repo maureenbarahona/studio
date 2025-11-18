@@ -20,6 +20,7 @@ import type {Transaction} from '@/lib/types';
 import {formatCurrency} from '@/lib/utils';
 import {useMemo} from 'react';
 import {format} from 'date-fns';
+import { currencies } from '@/lib/data';
 
 interface ReportsChartProps {
   data: Transaction[];
@@ -34,12 +35,13 @@ const expenseTypes: Transaction['type'][] = [
 
 export function ReportsChart({data}: ReportsChartProps) {
   const chartData = useMemo(() => {
-    const dailyData: {[key: string]: {ingresos: number; gastos: number}} = {};
+    const dailyData: {[key: string]: {ingresos: number; gastos: number, currencyCode: string}} = {};
 
     data.forEach((tx) => {
       const day = format(tx.date, 'yyyy-MM-dd');
+      const currency = currencies.find(c => c.id === tx.currencyId);
       if (!dailyData[day]) {
-        dailyData[day] = {ingresos: 0, gastos: 0};
+        dailyData[day] = {ingresos: 0, gastos: 0, currencyCode: currency?.code || 'HNL' };
       }
       if (incomeTypes.includes(tx.type)) {
         dailyData[day].ingresos += tx.amount;
@@ -88,7 +90,7 @@ export function ReportsChart({data}: ReportsChartProps) {
                 backgroundColor: 'hsl(var(--card))',
                 borderColor: 'hsl(var(--border))',
               }}
-              formatter={(value) => formatCurrency(value as number)}
+              formatter={(value, name, props) => formatCurrency(value as number, props.payload.currencyCode)}
             />
             <Bar
               dataKey="ingresos"

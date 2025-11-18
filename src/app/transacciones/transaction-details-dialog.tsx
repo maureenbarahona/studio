@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import type {Transaction} from '@/lib/types';
-import {accounts, locations, transactionStatuses, users} from '@/lib/data';
+import {accounts, locations, transactionStatuses, users, currencies} from '@/lib/data';
 import {formatCurrency} from '@/lib/utils';
 import {useState, type ReactNode} from 'react';
 
@@ -52,6 +52,8 @@ export function TransactionDetailsDialog({
   );
   const status = transactionStatuses.find(s => s.id === transaction.statusId);
   const user = users.find(u => u.id === transaction.userId);
+  const currency = currencies.find(c => c.id === transaction.currencyId);
+
 
   const date = new Date(transaction.date);
   const createdAt = new Date(transaction.createdAt);
@@ -74,7 +76,7 @@ export function TransactionDetailsDialog({
               label="Tipo"
               value={transactionTypeMap[transaction.type] ?? transaction.type}
             />
-            <DetailItem label="Monto" value={formatCurrency(transaction.amount)} />
+            <DetailItem label="Monto" value={formatCurrency(transaction.amount, currency?.code)} />
             <div className="col-span-2">
               <DetailItem label="Descripción" value={transaction.description} />
             </div>
@@ -93,6 +95,7 @@ export function TransactionDetailsDialog({
               label="Cuenta de Destino"
               value={destinationAccount?.name}
             />
+             <DetailItem label="Moneda" value={currency?.name} />
             <div className="col-span-2">
               <DetailItem
                 label="Fecha de Registro"

@@ -3,7 +3,7 @@
 import PageHeader from '@/components/page-header';
 import {DataTable} from './data-table';
 import {columns} from './columns';
-import {transactions as initialTransactions, users, locations, accounts} from '@/lib/data';
+import {transactions as initialTransactions, users, locations, accounts, currencies} from '@/lib/data';
 import {NewTransactionDialog} from './new-transaction-dialog';
 import {useState} from 'react';
 import type {Transaction} from '@/lib/types';
@@ -69,6 +69,7 @@ export default function TransaccionesPage() {
       'Localidad',
       'Tipo',
       'Monto',
+      'Moneda',
       'Descripción',
       'Cuenta Origen',
       'Cuenta Destino',
@@ -80,6 +81,7 @@ export default function TransaccionesPage() {
       locations.find((l) => l.id === tx.locationId)?.name || '',
       transactionTypeMap[tx.type] || tx.type,
       tx.amount,
+      currencies.find((c) => c.id === tx.currencyId)?.code || '',
       `"${tx.description.replace(/"/g, '""')}"`,
       accounts.find((a) => a.id === tx.sourceAccountId)?.name || '',
       accounts.find((a) => a.id === tx.destinationAccountId)?.name || '',

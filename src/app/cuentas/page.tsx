@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
-import {accounts as initialAccounts, locations as initialLocations} from '@/lib/data';
+import {accounts as initialAccounts, locations as initialLocations, currencies} from '@/lib/data';
 import {formatCurrency} from '@/lib/utils';
 import {Banknote, Building, MoreVertical, PlusCircle} from 'lucide-react';
 import {useState} from 'react';
@@ -23,22 +23,25 @@ export default function CuentasPage() {
   const [accounts, setAccounts] = useState<BankAccount[]>(initialAccounts);
 
   const handleAdd = (
-    item: Omit<Location, 'id' | 'cashBalance'> | Omit<BankAccount, 'id' | 'balance'>,
+    item: Omit<Location, 'id' | 'cashBalance' | 'currencyId'> | Omit<BankAccount, 'id' | 'balance' | 'currencyId'>,
     type: 'location' | 'account',
-    initialBalance: number
+    initialBalance: number,
+    currencyId: string
   ) => {
     if (type === 'location') {
       const newLocation: Location = {
-        ...item,
+        ...(item as Omit<Location, 'id' | 'cashBalance' | 'currencyId'>),
         id: `loc-${Date.now()}`,
         cashBalance: initialBalance,
+        currencyId: currencyId,
       };
       setLocations((prev) => [newLocation, ...prev]);
     } else {
       const newAccount: BankAccount = {
-        ...(item as Omit<BankAccount, 'id' | 'balance'>),
+        ...(item as Omit<BankAccount, 'id' | 'balance' | 'currencyId'>),
         id: `acc-${Date.now()}`,
         balance: initialBalance,
+        currencyId: currencyId,
       };
       setAccounts((prev) => [newAccount, ...prev]);
     }
@@ -60,7 +63,9 @@ export default function CuentasPage() {
         </TabsList>
         <TabsContent value="localidades">
           <div className="grid gap-6 pt-4 md:grid-cols-2 lg:grid-cols-3">
-            {locations.map((loc) => (
+            {locations.map((loc) => {
+              const currency = currencies.find(c => c.id === loc.currencyId);
+              return (
               <Card key={loc.id}>
                 <CardHeader className="flex-row items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -74,16 +79,18 @@ export default function CuentasPage() {
                 <CardContent>
                   <p className="text-sm text-muted-foreground">Efectivo en Caja</p>
                   <p className="text-2xl font-bold">
-                    {formatCurrency(loc.cashBalance)}
+                    {formatCurrency(loc.cashBalance, currency?.code)}
                   </p>
                 </CardContent>
               </Card>
-            ))}
+            )})}
           </div>
         </TabsContent>
         <TabsContent value="cuentas">
           <div className="grid gap-6 pt-4 md:grid-cols-1 lg:grid-cols-2">
-            {accounts.map((acc) => (
+            {accounts.map((acc) => {
+               const currency = currencies.find(c => c.id === acc.currencyId);
+               return (
               <Card key={acc.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -104,11 +111,11 @@ export default function CuentasPage() {
                 <CardContent>
                   <p className="text-sm text-muted-foreground">Saldo Actual</p>
                   <p className="text-2xl font-bold">
-                    {formatCurrency(acc.balance)}
+                    {formatCurrency(acc.balance, currency?.code)}
                   </p>
                 </CardContent>
               </Card>
-            ))}
+            )})}
           </div>
         </TabsContent>
       </Tabs>

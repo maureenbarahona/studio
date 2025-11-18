@@ -20,13 +20,13 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
         <StatCard
           title="Efectivo Total en Cajas"
-          value={formatCurrency(totalCash)}
+          value={formatCurrency(totalCash, 'HNL')}
           icon={<Wallet className="size-6 text-primary" />}
           description="Suma de efectivo en todas las localidades"
         />
         <StatCard
           title="Fondos Totales en Bancos"
-          value={formatCurrency(totalBankFunds)}
+          value={formatCurrency(totalBankFunds, 'HNL')}
           icon={<Banknote className="size-6 text-primary" />}
           description="Suma de saldos en todas las cuentas"
         />

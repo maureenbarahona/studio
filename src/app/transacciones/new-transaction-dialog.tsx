@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {Textarea} from '@/components/ui/textarea';
-import {accounts, locations, transactionStatuses} from '@/lib/data';
+import {accounts, locations, transactionStatuses, currencies} from '@/lib/data';
 import type {Transaction} from '@/lib/types';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {PlusCircle} from 'lucide-react';
@@ -48,6 +48,7 @@ const transactionSchema = z
       'otro',
     ]),
     amount: z.coerce.number().positive('El monto debe ser positivo.'),
+    currencyId: z.string().min(1, 'Debe seleccionar una moneda.'),
     locationId: z.string().min(1, 'Debe seleccionar una localidad.'),
     description: z.string().min(3, 'La descripción es muy corta.'),
     sourceAccountId: z.string().optional(),
@@ -94,6 +95,7 @@ export function NewTransactionDialog({
       amount: 0,
       description: '',
       statusId: transactionStatuses.find(s => s.name === 'Completada')?.id || '',
+      currencyId: currencies[0]?.id || '',
     },
   });
 
@@ -164,19 +166,43 @@ export function NewTransactionDialog({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="amount"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Monto (L)</FormLabel>
-                  <FormControl>
-                    <Input type="number" step="0.01" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({field}) => (
+                  <FormItem>
+                    <FormLabel>Monto</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="0.01" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currencyId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Moneda</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione una moneda..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {currencies.map(c => (
+                          <SelectItem key={c.id} value={c.id}>{c.code}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="locationId"

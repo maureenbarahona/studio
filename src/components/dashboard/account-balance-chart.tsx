@@ -16,10 +16,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { accounts } from '@/lib/data';
+import { accounts, currencies } from '@/lib/data';
 import { formatCurrency } from '@/lib/utils';
 
 export function AccountBalanceChart() {
+
+  const chartData = accounts.map(account => {
+    const currency = currencies.find(c => c.id === account.currencyId);
+    return {
+      ...account,
+      displayName: `${account.name} (${currency?.code})`
+    }
+  });
+
+
   return (
     <Card>
       <CardHeader>
@@ -30,28 +40,32 @@ export function AccountBalanceChart() {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={accounts}>
+          <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis
-              dataKey="name"
+              dataKey="displayName"
               stroke="hsl(var(--muted-foreground))"
               fontSize={12}
               tickLine={false}
               axisLine={false}
+              interval={0}
             />
             <YAxis
               stroke="hsl(var(--muted-foreground))"
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => formatCurrency(value as number)}
+              tickFormatter={(value) => formatCurrency(value as number, 'HNL')}
             />
             <Tooltip
               contentStyle={{
                 backgroundColor: 'hsl(var(--card))',
                 borderColor: 'hsl(var(--border))',
               }}
-              formatter={(value) => formatCurrency(value as number)}
+              formatter={(value, name, props) => {
+                const currency = currencies.find(c => c.id === props.payload.currencyId);
+                return formatCurrency(value as number, currency?.code)
+              }}
               labelStyle={{ fontWeight: 'bold' }}
             />
             <Bar

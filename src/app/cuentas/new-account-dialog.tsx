@@ -33,6 +33,7 @@ import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {useToast} from '@/hooks/use-toast';
+import { currencies } from '@/lib/data';
 
 const formSchema = z.object({
   type: z.enum(['location', 'account']),
@@ -40,6 +41,7 @@ const formSchema = z.object({
   initialBalance: z.coerce
     .number()
     .min(0, 'El saldo no puede ser negativo.'),
+  currencyId: z.string().min(1, "Debe seleccionar una moneda."),
   bankName: z.string().optional(),
   accountNumber: z.string().optional(),
 });
@@ -49,10 +51,11 @@ type FormValues = z.infer<typeof formSchema>;
 interface NewAccountDialogProps {
   onAdd: (
     item:
-      | Omit<Location, 'id' | 'cashBalance'>
-      | Omit<BankAccount, 'id' | 'balance'>,
+      | Omit<Location, 'id' | 'cashBalance' | 'currencyId'>
+      | Omit<BankAccount, 'id' | 'balance' | 'currencyId'>,
     type: 'location' | 'account',
-    initialBalance: number
+    initialBalance: number,
+    currencyId: string,
   ) => void;
 }
 
@@ -67,15 +70,16 @@ export function NewAccountDialog({onAdd}: NewAccountDialogProps) {
       initialBalance: 0,
       bankName: '',
       accountNumber: '',
+      currencyId: currencies[0]?.id || '',
     },
   });
 
   const type = form.watch('type');
 
   function onSubmit(data: FormValues) {
-    const {type, name, initialBalance, bankName, accountNumber} = data;
+    const {type, name, initialBalance, bankName, accountNumber, currencyId} = data;
     if (type === 'location') {
-      onAdd({name}, 'location', initialBalance);
+      onAdd({name}, 'location', initialBalance, currencyId);
     } else {
       onAdd(
         {
@@ -84,7 +88,8 @@ export function NewAccountDialog({onAdd}: NewAccountDialogProps) {
           accountNumber: accountNumber || '',
         },
         'account',
-        initialBalance
+        initialBalance,
+        currencyId,
       );
     }
 
@@ -165,10 +170,32 @@ export function NewAccountDialog({onAdd}: NewAccountDialogProps) {
                   name="initialBalance"
                   render={({field}) => (
                     <FormItem>
-                      <FormLabel>Saldo Inicial (L)</FormLabel>
+                      <FormLabel>Saldo Inicial</FormLabel>
                       <FormControl>
                         <Input type="number" step="0.01" {...field} />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="currencyId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Moneda</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Seleccione moneda..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {currencies.map(c => (
+                            <SelectItem key={c.id} value={c.id}>{c.name} ({c.code})</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
