@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {MoreHorizontal} from 'lucide-react';
+import { NewUserDialog } from './new-user-dialog';
 
 const columns: ColumnDef<User>[] = [
   {
@@ -64,16 +65,20 @@ const columns: ColumnDef<User>[] = [
 
 export function UsersTable() {
   const [users, setUsers] = useState<User[]>(initialUsers);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // TODO: Implementar la adición de usuarios
-  const handleAddUser = () => {
-    console.log('Añadir nuevo usuario');
+  const handleAddUser = (newUser: Omit<User, 'id'>) => {
+    const userToAdd: User = {
+      ...newUser,
+      id: `user-${Date.now()}`,
+    };
+    setUsers((prev) => [userToAdd, ...prev]);
   };
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-end">
-        <Button onClick={handleAddUser}>
+        <Button onClick={() => setIsDialogOpen(true)}>
           <PlusCircle className="mr-2" />
           Añadir Usuario
         </Button>
@@ -83,6 +88,11 @@ export function UsersTable() {
         data={users}
         filterColumn="name"
         filterPlaceholder="Filtrar por nombre..."
+      />
+      <NewUserDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onAddUser={handleAddUser}
       />
     </div>
   );
