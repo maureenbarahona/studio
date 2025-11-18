@@ -18,50 +18,28 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
 import {useState} from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filterColumn?: string;
-  filterPlaceholder?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filterColumn = 'description',
-  filterPlaceholder = 'Filtrar por descripción...',
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      columnFilters,
-    },
   });
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center">
-        <Input
-          placeholder={filterPlaceholder}
-          value={
-            (table.getColumn(filterColumn)?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) =>
-            table.getColumn(filterColumn)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
       <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
