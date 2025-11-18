@@ -53,4 +53,5 @@ export interface User {
   email: string;
   role: string; // Corresponds to UserRole.id
   status: 'active' | 'inactive';
+  password?: string;
 }

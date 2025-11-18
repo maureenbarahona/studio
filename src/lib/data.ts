@@ -13,8 +13,8 @@ export const userRoles: UserRole[] = [
 ];
 
 export const users: User[] = [
-  {id: 'user1', name: 'Yaneth Garcia', email: 'admin@comercialyaneth.com', role: 'role1', status: 'active'},
-  {id: 'user2', name: 'Agente Norte', email: 'agente.norte@comercialyaneth.com', role: 'role2', status: 'active'},
+  {id: 'user1', name: 'Yaneth Garcia', email: 'admin@comercialyaneth.com', role: 'role1', status: 'active', password: 'QwErT123'},
+  {id: 'user2', name: 'Agente Norte', email: 'agente.norte@comercialyaneth.com', role: 'role2', status: 'active', password: 'password123'},
 ];
 
 export const transactionStatuses: TransactionStatus[] = [

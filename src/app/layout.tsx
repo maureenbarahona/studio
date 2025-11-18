@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
-import {AppShell} from '@/components/app-shell';
 import {Toaster} from '@/components/ui/toaster';
 import './globals.css';
+import {AuthProvider} from '@/components/auth-provider';
 
 export const metadata: Metadata = {
   title: 'Yaneth Control Bancario',
@@ -28,7 +28,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <AppShell>{children}</AppShell>
+        <AuthProvider>{children}</AuthProvider>
         <Toaster />
       </body>
     </html>

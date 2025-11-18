@@ -38,6 +38,7 @@ import {usePathname} from 'next/navigation';
 import {Logo} from './logo';
 import {ReactNode} from 'react';
 import {Button} from './ui/button';
+import {useAuth} from './auth-provider';
 
 const navItems = [
   {href: '/', label: 'Dashboard', icon: <LayoutDashboard />},
@@ -70,7 +71,7 @@ export function AppShell({children}: {children: ReactNode}) {
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
+                <Link href={item.href} legacyBehavior passHref>
                   <SidebarMenuButton
                     isActive={pathname === item.href}
                     icon={item.icon}
@@ -97,6 +98,12 @@ export function AppShell({children}: {children: ReactNode}) {
 }
 
 function UserMenu() {
+  const {user, logout} = useAuth();
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -106,17 +113,17 @@ function UserMenu() {
           aria-label="Abrir menú de usuario"
         >
           <Avatar className="size-8">
-            <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-            <AvatarFallback>CY</AvatarFallback>
+            <AvatarImage src={`https://i.pravatar.cc/150?u=${user.id}`} />
+            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Yaneth</p>
+            <p className="text-sm font-medium leading-none">{user.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              admin@comercialyaneth.com
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -126,7 +133,7 @@ function UserMenu() {
           <span>Perfil</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Cerrar Sesión</span>
         </DropdownMenuItem>
