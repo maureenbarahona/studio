@@ -2,7 +2,7 @@
 
 import {useState} from 'react';
 import type {User} from '@/lib/types';
-import {users as initialUsers} from '@/lib/data';
+import {users as initialUsers, userRoles} from '@/lib/data';
 import {DataTable} from '@/app/transacciones/data-table';
 import {Button} from '@/components/ui/button';
 import {PlusCircle} from 'lucide-react';
@@ -51,10 +51,12 @@ export function UsersTable() {
       accessorKey: 'role',
       header: 'Rol',
       cell: ({row}) => {
-        const role = row.getValue('role') as string;
+        const roleId = row.getValue('role') as string;
+        const role = userRoles.find((r) => r.id === roleId);
+        const isAdmin = role?.name.toLowerCase().includes('admin');
         return (
-          <Badge variant={role === 'admin' ? 'default' : 'secondary'}>
-            {role === 'admin' ? 'Administrador' : 'Agente'}
+          <Badge variant={isAdmin ? 'default' : 'secondary'}>
+            {role?.name ?? 'N/A'}
           </Badge>
         );
       },

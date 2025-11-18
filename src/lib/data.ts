@@ -4,11 +4,17 @@ import type {
   Transaction,
   User,
   TransactionStatus,
+  UserRole,
 } from './types';
 
+export const userRoles: UserRole[] = [
+  {id: 'role1', name: 'Administrador', description: 'Acceso total al sistema.'},
+  {id: 'role2', name: 'Agente', description: 'Acceso limitado para operaciones diarias.'},
+];
+
 export const users: User[] = [
-  {id: 'user1', name: 'Yaneth Garcia', email: 'admin@comercialyaneth.com', role: 'admin', status: 'active'},
-  {id: 'user2', name: 'Agente Norte', email: 'agente.norte@comercialyaneth.com', role: 'agent', status: 'active'},
+  {id: 'user1', name: 'Yaneth Garcia', email: 'admin@comercialyaneth.com', role: 'role1', status: 'active'},
+  {id: 'user2', name: 'Agente Norte', email: 'agente.norte@comercialyaneth.com', role: 'role2', status: 'active'},
 ];
 
 export const transactionStatuses: TransactionStatus[] = [

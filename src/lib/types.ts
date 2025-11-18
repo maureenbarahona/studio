@@ -41,10 +41,16 @@ export interface TransactionStatus {
   description?: string;
 }
 
+export interface UserRole {
+  id: string;
+  name: string;
+  description?: string;
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'agent';
+  role: string; // Corresponds to UserRole.id
   status: 'active' | 'inactive';
 }

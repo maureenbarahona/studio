@@ -31,13 +31,12 @@ import {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {useToast} from '@/hooks/use-toast';
+import {userRoles} from '@/lib/data';
 
 const formSchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres.'),
   email: z.string().email('El correo electrónico no es válido.'),
-  role: z.enum(['admin', 'agent'], {
-    required_error: 'Debe seleccionar un rol.',
-  }),
+  role: z.string().min(1, 'Debe seleccionar un rol.'),
   status: z.enum(['active', 'inactive'], {
     required_error: 'Debe seleccionar un estado.',
   }),
@@ -72,7 +71,7 @@ export function UserDialog({
       form.reset({
         name: '',
         email: '',
-        role: 'agent',
+        role: userRoles.find(r => r.name === 'Agente')?.id || '',
         status: 'active',
       });
     }
@@ -157,8 +156,11 @@ export function UserDialog({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="admin">Administrador</SelectItem>
-                      <SelectItem value="agent">Agente</SelectItem>
+                      {userRoles.map((role) => (
+                        <SelectItem key={role.id} value={role.id}>
+                          {role.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
