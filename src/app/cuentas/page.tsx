@@ -11,21 +11,46 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
-import {accounts, locations} from '@/lib/data';
+import {accounts as initialAccounts, locations as initialLocations} from '@/lib/data';
 import {formatCurrency} from '@/lib/utils';
 import {Banknote, Building, MoreVertical, PlusCircle} from 'lucide-react';
+import {useState} from 'react';
+import type {BankAccount, Location} from '@/lib/types';
+import {NewAccountDialog} from './new-account-dialog';
 
 export default function CuentasPage() {
+  const [locations, setLocations] = useState<Location[]>(initialLocations);
+  const [accounts, setAccounts] = useState<BankAccount[]>(initialAccounts);
+
+  const handleAdd = (
+    item: Omit<Location, 'id' | 'cashBalance'> | Omit<BankAccount, 'id' | 'balance'>,
+    type: 'location' | 'account',
+    initialBalance: number
+  ) => {
+    if (type === 'location') {
+      const newLocation: Location = {
+        ...item,
+        id: `loc-${Date.now()}`,
+        cashBalance: initialBalance,
+      };
+      setLocations((prev) => [newLocation, ...prev]);
+    } else {
+      const newAccount: BankAccount = {
+        ...(item as Omit<BankAccount, 'id' | 'balance'>),
+        id: `acc-${Date.now()}`,
+        balance: initialBalance,
+      };
+      setAccounts((prev) => [newAccount, ...prev]);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
         title="Cuentas y Localidades"
         description="Administra tus cuentas bancarias y localidades de agentes."
       >
-        <Button>
-          <PlusCircle className="mr-2" />
-          Añadir Nuevo
-        </Button>
+        <NewAccountDialog onAdd={handleAdd} />
       </PageHeader>
 
       <Tabs defaultValue="localidades">
