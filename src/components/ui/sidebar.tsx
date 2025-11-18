@@ -568,8 +568,15 @@ const SidebarMenuButton = React.forwardRef<
         className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
         {...props}
       >
-        {icon}
-        {children}
+        {/* This is a workaround for the asChild prop to work with the Tooltip component. */}
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {icon}
+            {children}
+          </>
+        )}
       </Comp>
     )
 
