@@ -39,6 +39,7 @@ import {Logo} from './logo';
 import {ReactNode} from 'react';
 import {Button} from './ui/button';
 import {useAuth} from './auth-provider';
+import { useConfig } from './config-provider';
 
 const navItems = [
   {href: '/', label: 'Dashboard', icon: <LayoutDashboard />},
@@ -50,6 +51,7 @@ const navItems = [
 
 export function AppShell({children}: {children: ReactNode}) {
   const pathname = usePathname();
+  const { config } = useConfig();
 
   return (
     <SidebarProvider>
@@ -59,7 +61,7 @@ export function AppShell({children}: {children: ReactNode}) {
             <Logo className="size-8 shrink-0 text-sidebar-primary" />
             <div className="flex flex-col">
               <span className="text-lg font-bold text-sidebar-foreground">
-                Comercial Yaneth
+                {config.company.name}
               </span>
               <span className="text-xs text-sidebar-foreground/70">
                 Control de Agentes
@@ -71,17 +73,13 @@ export function AppShell({children}: {children: ReactNode}) {
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href} passHref>
+                <Link href={item.href} className="w-full">
                   <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href}
+                    isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
                     icon={item.icon}
                     tooltip={item.label}
                   >
-                    <span>
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </span>
+                    {item.label}
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>

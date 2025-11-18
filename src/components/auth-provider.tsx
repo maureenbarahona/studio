@@ -11,6 +11,7 @@ import {usePathname, useRouter} from 'next/navigation';
 import type {User} from '@/lib/types';
 import {users} from '@/lib/data';
 import {AppShell} from './app-shell';
+import { ConfigProvider } from './config-provider';
 
 interface AuthContextType {
   user: User | null;
@@ -78,7 +79,9 @@ export function AuthProvider({children}: {children: ReactNode}) {
 
   return (
     <AuthContext.Provider value={authContextValue}>
-      {isLoginPage ? children : <AppShell>{children}</AppShell>}
+      <ConfigProvider>
+        {isLoginPage ? children : <AppShell>{children}</AppShell>}
+      </ConfigProvider>
     </AuthContext.Provider>
   );
 }

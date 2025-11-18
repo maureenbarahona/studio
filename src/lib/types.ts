@@ -1,3 +1,5 @@
+import { type Company } from "./config-types";
+
 export type TransactionType =
   | 'deposito'
   | 'retiro'
@@ -54,4 +56,8 @@ export interface User {
   role: string; // Corresponds to UserRole.id
   status: 'active' | 'inactive';
   password?: string;
+}
+
+export interface AppConfig {
+  company: Company;
 }

@@ -17,9 +17,11 @@ import {useToast} from '@/hooks/use-toast';
 import {Logo} from '@/components/logo';
 import {useAuth} from '@/components/auth-provider';
 import {Eye, EyeOff} from 'lucide-react';
+import { useConfig } from '@/components/config-provider';
 
 export default function LoginPage() {
   const {login} = useAuth();
+  const { config } = useConfig();
   const router = useRouter();
   const {toast} = useToast();
   const [email, setEmail] = useState('');
@@ -50,7 +52,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="items-center text-center">
           <Logo className="mb-4 size-16 text-primary" />
-          <CardTitle className="text-2xl">Comercial Yaneth</CardTitle>
+          <CardTitle className="text-2xl">{config.company.name}</CardTitle>
           <CardDescription>
             Inicia sesión para acceder al panel de control
           </CardDescription>

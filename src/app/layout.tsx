@@ -4,8 +4,8 @@ import './globals.css';
 import {AuthProvider} from '@/components/auth-provider';
 
 export const metadata: Metadata = {
-  title: 'Yaneth Control Bancario',
-  description: 'Control de Agentes Bancarios para Comercial Yaneth',
+  title: 'Agent Control',
+  description: 'Control de Agentes Bancarios',
 };
 
 export default function RootLayout({
