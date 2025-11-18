@@ -29,3 +29,9 @@ export interface Language {
     name: string;
     code: string; // ISO 639-1 code
 }
+
+export interface Country {
+    id: string;
+    name: string;
+    code: string; // ISO 3166-1 alpha-2 code
+}

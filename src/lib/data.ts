@@ -6,6 +6,7 @@ import type {
   TransactionStatus,
   UserRole,
 } from './types';
+import type { Country } from './config-types';
 
 export const userRoles: UserRole[] = [
   {id: 'role1', name: 'Administrador', description: 'Acceso total al sistema.'},
@@ -149,4 +150,10 @@ export const transactions: Transaction[] = [
     userId: 'user1',
     statusId: 'status1',
   },
+];
+
+export const countries: Country[] = [
+  { id: 'country1', name: 'Honduras', code: 'HN' },
+  { id: 'country2', name: 'El Salvador', code: 'SV' },
+  { id: 'country3', name: 'Guatemala', code: 'GT' },
 ];

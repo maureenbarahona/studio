@@ -13,6 +13,7 @@ import {
   Shield,
   Briefcase,
   Workflow,
+  Map,
 } from 'lucide-react';
 import PageHeader from '@/components/page-header';
 
@@ -59,6 +60,11 @@ const sidebarNavItems = [
         title: 'Monedas',
         href: '/configuraciones/monedas',
         icon: <Banknote className="size-4" />,
+      },
+      {
+        title: 'Países',
+        href: '/configuraciones/paises',
+        icon: <Map className="size-4" />,
       },
       {
         title: 'Ciudades',
