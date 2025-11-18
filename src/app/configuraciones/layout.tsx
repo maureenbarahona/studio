@@ -34,6 +34,21 @@ const sidebarNavItems = [
         href: '/configuraciones/sucursales',
         icon: <Briefcase className="size-4" />,
       },
+      {
+        title: 'Países',
+        href: '/configuraciones/paises',
+        icon: <Map className="size-4" />,
+      },
+      {
+        title: 'Ciudades',
+        href: '/configuraciones/ciudades',
+        icon: <Globe className="size-4" />,
+      },
+      {
+        title: 'Idiomas',
+        href: '/configuraciones/idiomas',
+        icon: <Languages className="size-4" />,
+      },
     ],
   },
   {
@@ -63,21 +78,6 @@ const sidebarNavItems = [
         title: 'Monedas',
         href: '/configuraciones/monedas',
         icon: <Banknote className="size-4" />,
-      },
-      {
-        title: 'Países',
-        href: '/configuraciones/paises',
-        icon: <Map className="size-4" />,
-      },
-      {
-        title: 'Ciudades',
-        href: '/configuraciones/ciudades',
-        icon: <Globe className="size-4" />,
-      },
-      {
-        title: 'Idiomas',
-        href: '/configuraciones/idiomas',
-        icon: <Languages className="size-4" />,
       },
     ],
   },
