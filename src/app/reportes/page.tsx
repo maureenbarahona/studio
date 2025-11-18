@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select';
 import {Calendar as CalendarIcon, FileDown} from 'lucide-react';
 import {DateRange} from 'react-day-picker';
-import {addDays, format} from 'date-fns';
+import {addDays, format, endOfDay} from 'date-fns';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {Calendar} from '@/components/ui/calendar';
 import {cn} from '@/lib/utils';
@@ -49,8 +49,10 @@ export default function ReportesPage() {
     }
 
     if (date?.from && date?.to) {
+      const fromDate = date.from;
+      const toDate = endOfDay(date.to); // Set to the end of the day
       filtered = filtered.filter(
-        (tx) => tx.date >= date.from! && tx.date <= date.to!
+        (tx) => tx.date >= fromDate && tx.date <= toDate
       );
     }
 
