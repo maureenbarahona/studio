@@ -13,23 +13,30 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {MoreHorizontal} from 'lucide-react';
 import {UserDialog} from './new-user-dialog';
+import {useAuth} from '@/components/auth-provider';
+import {useToast} from '@/hooks/use-toast';
 
 export function UsersTable() {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  
+  const {user: loggedInUser} = useAuth();
+  const {toast} = useToast();
+
   const handleSaveUser = (userToSave: User) => {
-    const userExists = users.some(user => user.id === userToSave.id);
+    const userExists = users.some((user) => user.id === userToSave.id);
 
     if (userExists) {
-      setUsers(users.map(user => user.id === userToSave.id ? userToSave : user));
+      setUsers(
+        users.map((user) => (user.id === userToSave.id ? userToSave : user))
+      );
     } else {
-      setUsers(prev => [userToSave, ...prev]);
+      setUsers((prev) => [userToSave, ...prev]);
     }
   };
 
@@ -38,6 +45,27 @@ export function UsersTable() {
     setIsDialogOpen(true);
   };
   
+  const handleSendPassword = (userToSend: User) => {
+    const fullUser = initialUsers.find(u => u.id === userToSend.id);
+    if (fullUser && fullUser.password) {
+       toast({
+        title: 'Correo Enviado',
+        description: `La contraseña para ${fullUser.name} ha sido enviada a ${fullUser.email}.`,
+      });
+    } else {
+       toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'No se pudo encontrar la contraseña para este usuario.',
+      });
+    }
+  }
+
+  const loggedInUserRole = userRoles.find(
+    (role) => role.id === loggedInUser?.role
+  );
+  const isAdmin = loggedInUserRole?.name === 'Administrador';
+
   const columns: ColumnDef<User>[] = [
     {
       accessorKey: 'name',
@@ -53,9 +81,9 @@ export function UsersTable() {
       cell: ({row}) => {
         const roleId = row.getValue('role') as string;
         const role = userRoles.find((r) => r.id === roleId);
-        const isAdmin = role?.name.toLowerCase().includes('admin');
+        const isAdminRole = role?.name.toLowerCase().includes('admin');
         return (
-          <Badge variant={isAdmin ? 'default' : 'secondary'}>
+          <Badge variant={isAdminRole ? 'default' : 'secondary'}>
             {role?.name ?? 'N/A'}
           </Badge>
         );
@@ -90,13 +118,20 @@ export function UsersTable() {
               <DropdownMenuItem onClick={() => handleOpenDialog(user)}>
                 Editar
               </DropdownMenuItem>
+              {isAdmin && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => handleSendPassword(user)}>
+                    Enviar Contraseña
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );
       },
     },
   ];
-
 
   return (
     <div className="flex flex-col gap-4">
