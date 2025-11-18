@@ -20,6 +20,7 @@ import {MoreHorizontal} from 'lucide-react';
 import {UserDialog} from './new-user-dialog';
 import {useAuth} from '@/components/auth-provider';
 import {useToast} from '@/hooks/use-toast';
+import { generateRandomPassword } from '@/lib/utils';
 
 export function UsersTable() {
   const [users, setUsers] = useState<User[]>(initialUsers);
@@ -44,22 +45,18 @@ export function UsersTable() {
     setEditingUser(user);
     setIsDialogOpen(true);
   };
-  
+
   const handleSendPassword = (userToSend: User) => {
-    const fullUser = users.find(u => u.id === userToSend.id);
-    if (fullUser && fullUser.password) {
-       toast({
-        title: 'Correo Enviado',
-        description: `La contraseña para ${fullUser.name} ha sido enviada a ${fullUser.email}.`,
-      });
-    } else {
-       toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'No se pudo encontrar la contraseña para este usuario.',
-      });
-    }
-  }
+    const newPassword = generateRandomPassword();
+    const updatedUser = { ...userToSend, password: newPassword };
+
+    setUsers(users.map(u => u.id === userToSend.id ? updatedUser : u));
+
+    toast({
+      title: 'Contraseña Generada y Enviada',
+      description: `Una nueva contraseña para ${updatedUser.name} ha sido enviada a ${updatedUser.email}.`,
+    });
+  };
 
   const loggedInUserRole = userRoles.find(
     (role) => role.id === loggedInUser?.role
