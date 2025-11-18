@@ -20,12 +20,17 @@ import {MoreHorizontal} from 'lucide-react';
 import {UserDialog} from './new-user-dialog';
 import {useAuth} from '@/components/auth-provider';
 import {useToast} from '@/hooks/use-toast';
-import { generateRandomPassword } from '@/lib/utils';
+import {generateRandomPassword} from '@/lib/utils';
+import {PasswordDisplayDialog} from './password-display-dialog';
 
 export function UsersTable() {
   const [users, setUsers] = useState<User[]>(initialUsers);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [generatedPassword, setGeneratedPassword] = useState<string | null>(
+    null
+  );
   const {user: loggedInUser} = useAuth();
   const {toast} = useToast();
 
@@ -41,20 +46,23 @@ export function UsersTable() {
     }
   };
 
-  const handleOpenDialog = (user: User | null = null) => {
+  const handleOpenUserDialog = (user: User | null = null) => {
     setEditingUser(user);
-    setIsDialogOpen(true);
+    setIsUserDialogOpen(true);
   };
 
   const handleSendPassword = (userToSend: User) => {
     const newPassword = generateRandomPassword();
-    const updatedUser = { ...userToSend, password: newPassword };
+    const updatedUser = {...userToSend, password: newPassword};
 
-    setUsers(users.map(u => u.id === userToSend.id ? updatedUser : u));
+    setUsers((users) => users.map((u) => (u.id === userToSend.id ? updatedUser : u)));
+    setEditingUser(updatedUser);
+    setGeneratedPassword(newPassword);
+    setIsPasswordDialogOpen(true);
 
     toast({
-      title: 'Contraseña Generada y Enviada',
-      description: `Una nueva contraseña para ${updatedUser.name} ha sido enviada a ${updatedUser.email}.`,
+      title: 'Contraseña Generada',
+      description: `Se ha generado una nueva contraseña para ${updatedUser.name}.`,
     });
   };
 
@@ -88,7 +96,9 @@ export function UsersTable() {
       filterFn: (row, id, value) => {
         const roleId = row.getValue(id) as string;
         const role = userRoles.find((r) => r.id === roleId);
-        return role ? role.name.toLowerCase().includes(String(value).toLowerCase()) : false;
+        return role
+          ? role.name.toLowerCase().includes(String(value).toLowerCase())
+          : false;
       },
     },
     {
@@ -122,7 +132,7 @@ export function UsersTable() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => handleOpenDialog(user)}>
+              <DropdownMenuItem onClick={() => handleOpenUserDialog(user)}>
                 Editar
               </DropdownMenuItem>
               {isAdmin && (
@@ -143,7 +153,7 @@ export function UsersTable() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-end">
-        <Button onClick={() => handleOpenDialog()}>
+        <Button onClick={() => handleOpenUserDialog()}>
           <PlusCircle className="mr-2" />
           Añadir Usuario
         </Button>
@@ -155,10 +165,16 @@ export function UsersTable() {
         filterPlaceholder="Filtrar por nombre..."
       />
       <UserDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
+        open={isUserDialogOpen}
+        onOpenChange={setIsUserDialogOpen}
         onSaveUser={handleSaveUser}
         user={editingUser}
+      />
+      <PasswordDisplayDialog
+        open={isPasswordDialogOpen}
+        onOpenChange={setIsPasswordDialogOpen}
+        user={editingUser}
+        password={generatedPassword}
       />
     </div>
   );
