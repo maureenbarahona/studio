@@ -65,7 +65,12 @@ export function TransactionStatusesTable() {
           Añadir Estado
         </Button>
       </div>
-      <DataTable columns={columns} data={statuses} />
+      <DataTable
+        columns={columns}
+        data={statuses}
+        filterColumn="name"
+        filterPlaceholder="Filtrar por nombre..."
+      />
     </div>
   );
 }

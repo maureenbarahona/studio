@@ -52,7 +52,7 @@ export default function ReportesPage() {
       const fromDate = date.from;
       const toDate = endOfDay(date.to); // Set to the end of the day
       filtered = filtered.filter(
-        (tx) => tx.date >= fromDate && tx.date <= toDate
+        (tx) => new Date(tx.date) >= fromDate && new Date(tx.date) <= toDate
       );
     }
 

@@ -24,11 +24,15 @@ import {useState} from 'react';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filterColumn?: string;
+  filterPlaceholder?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterColumn = 'description',
+  filterPlaceholder = 'Filtrar por descripción...',
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -48,12 +52,12 @@ export function DataTable<TData, TValue>({
     <div className="flex flex-col gap-4">
       <div className="flex items-center">
         <Input
-          placeholder="Filtrar por descripción..."
+          placeholder={filterPlaceholder}
           value={
-            (table.getColumn('description')?.getFilterValue() as string) ?? ''
+            (table.getColumn(filterColumn)?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
-            table.getColumn('description')?.setFilterValue(event.target.value)
+            table.getColumn(filterColumn)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

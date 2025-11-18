@@ -42,7 +42,7 @@ export default function TransaccionesPage() {
         </div>
       </PageHeader>
 
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={data} filterColumn="description" />
     </div>
   );
 }

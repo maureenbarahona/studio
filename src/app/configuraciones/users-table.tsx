@@ -78,7 +78,12 @@ export function UsersTable() {
           Añadir Usuario
         </Button>
       </div>
-      <DataTable columns={columns} data={users} />
+      <DataTable
+        columns={columns}
+        data={users}
+        filterColumn="name"
+        filterPlaceholder="Filtrar por nombre..."
+      />
     </div>
   );
 }
