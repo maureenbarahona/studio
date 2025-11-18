@@ -51,7 +51,7 @@ export const transactions: Transaction[] = [
   },
   {
     id: 'txn3',
-    date: new Date('2024-0-21T14:15:00'),
+    date: new Date('2024-07-21T14:15:00'),
     locationId: 'loc1',
     type: 'retiro',
     amount: 1000,
