@@ -30,6 +30,7 @@ import {
   Landmark,
   LayoutDashboard,
   LogOut,
+  Settings,
   User,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -43,6 +44,7 @@ const navItems = [
   {href: '/transacciones', label: 'Transacciones', icon: <ArrowRightLeft />},
   {href: '/cuentas', label: 'Cuentas', icon: <Landmark />},
   {href: '/reportes', label: 'Reportes', icon: <BarChart3 />},
+  {href: '/configuraciones', label: 'Configuraciones', icon: <Settings />},
 ];
 
 export function AppShell({children}: {children: ReactNode}) {

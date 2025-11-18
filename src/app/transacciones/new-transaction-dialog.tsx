@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {Textarea} from '@/components/ui/textarea';
-import {accounts, locations} from '@/lib/data';
+import {accounts, locations, transactionStatuses} from '@/lib/data';
 import type {Transaction} from '@/lib/types';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {PlusCircle} from 'lucide-react';
@@ -52,6 +52,7 @@ const transactionSchema = z
     description: z.string().min(3, 'La descripción es muy corta.'),
     sourceAccountId: z.string().optional(),
     destinationAccountId: z.string().optional(),
+    statusId: z.string().min(1, 'Debe seleccionar un estado.'),
   })
   .refine(
     (data) => {
@@ -78,7 +79,7 @@ const transactionSchema = z
 type TransactionFormValues = z.infer<typeof transactionSchema>;
 
 interface NewTransactionDialogProps {
-  onTransactionAdd: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
+  onTransactionAdd: (transaction: Omit<Transaction, 'id' | 'date' | 'createdAt' | 'userId'>) => void;
 }
 
 export function NewTransactionDialog({
@@ -92,6 +93,7 @@ export function NewTransactionDialog({
     defaultValues: {
       amount: 0,
       description: '',
+      statusId: transactionStatuses.find(s => s.name === 'Completada')?.id || '',
     },
   });
 
@@ -260,6 +262,33 @@ export function NewTransactionDialog({
                 )}
               />
             )}
+             <FormField
+              control={form.control}
+              name="statusId"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Estado</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione un estado..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {transactionStatuses.map((status) => (
+                        <SelectItem key={status.id} value={status.id}>
+                          {status.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="description"

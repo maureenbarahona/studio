@@ -2,7 +2,7 @@
 
 import type {ColumnDef} from '@tanstack/react-table';
 import type {Transaction} from '@/lib/types';
-import {accounts, locations} from '@/lib/data';
+import {accounts, locations, transactionStatuses, users} from '@/lib/data';
 import {formatCurrency} from '@/lib/utils';
 import {Badge} from '@/components/ui/badge';
 import {
@@ -65,6 +65,21 @@ export const columns: ColumnDef<Transaction>[] = [
       return (
         <div className="text-right font-medium">{formatCurrency(amount)}</div>
       );
+    },
+  },
+  {
+    accessorKey: 'statusId',
+    header: 'Estado',
+    cell: ({row}) => {
+      const statusId = row.getValue('statusId') as string;
+      const status = transactionStatuses.find((s) => s.id === statusId);
+      if (!status) return 'N/A';
+
+      let variant: 'default' | 'secondary' | 'destructive' = 'secondary';
+      if (status.name === 'Completada') variant = 'default';
+      if (status.name === 'Anulada') variant = 'destructive';
+
+      return <Badge variant={variant}>{status.name}</Badge>;
     },
   },
   {
