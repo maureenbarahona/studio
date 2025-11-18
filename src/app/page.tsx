@@ -4,6 +4,7 @@ import {StatCard} from '@/components/dashboard/stat-card';
 import PageHeader from '@/components/page-header';
 import {accounts, locations} from '@/lib/data';
 import {formatCurrency} from '@/lib/utils';
+import { AccountBalanceChart } from '@/components/dashboard/account-balance-chart';
 
 export default function DashboardPage() {
   const totalCash = locations.reduce((sum, loc) => sum + loc.cashBalance, 0);
@@ -31,6 +32,7 @@ export default function DashboardPage() {
         />
       </div>
 
+      <AccountBalanceChart />
       <RecentTransactions />
     </div>
   );
