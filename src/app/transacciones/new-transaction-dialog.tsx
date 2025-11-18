@@ -5,11 +5,11 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-DialogFooter,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/componentsui/dialog';
+} from '@/components/ui/dialog';
 import {Input} from '@/components/ui/input';
 import {
   Form,
@@ -239,7 +239,7 @@ export function NewTransactionDialog({
                   <FormItem>
                     <FormLabel>Cuenta de Destino</FormLabel>
                     <Select
-                      onValuechange={field.onChange}
+                      onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
