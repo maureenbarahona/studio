@@ -16,6 +16,7 @@ import {Label} from '@/components/ui/label';
 import {useToast} from '@/hooks/use-toast';
 import {Logo} from '@/components/logo';
 import {useAuth} from '@/components/auth-provider';
+import {Eye, EyeOff} from 'lucide-react';
 
 export default function LoginPage() {
   const {login} = useAuth();
@@ -23,6 +24,7 @@ export default function LoginPage() {
   const {toast} = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,16 +69,31 @@ export default function LoginPage() {
                 disabled={isLoading}
               />
             </div>
-            <div className="space-y-2">
+            <div className="relative space-y-2">
               <Label htmlFor="password">Contraseña</Label>
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
+                className="pr-10"
               />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-7 h-7 w-7 text-muted-foreground"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              >
+                {showPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
+              </Button>
             </div>
           </CardContent>
           <CardFooter>
