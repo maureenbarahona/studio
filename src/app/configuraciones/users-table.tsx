@@ -46,7 +46,7 @@ export function UsersTable() {
   };
   
   const handleSendPassword = (userToSend: User) => {
-    const fullUser = initialUsers.find(u => u.id === userToSend.id);
+    const fullUser = users.find(u => u.id === userToSend.id);
     if (fullUser && fullUser.password) {
        toast({
         title: 'Correo Enviado',
@@ -88,6 +88,11 @@ export function UsersTable() {
           </Badge>
         );
       },
+      filterFn: (row, id, value) => {
+        const roleId = row.getValue(id) as string;
+        const role = userRoles.find((r) => r.id === roleId);
+        return role ? role.name.toLowerCase().includes(String(value).toLowerCase()) : false;
+      },
     },
     {
       accessorKey: 'status',
@@ -99,6 +104,11 @@ export function UsersTable() {
             {status === 'active' ? 'Activo' : 'Inactivo'}
           </Badge>
         );
+      },
+      filterFn: (row, id, value) => {
+        const status = row.getValue(id) as string;
+        const statusText = status === 'active' ? 'activo' : 'inactivo';
+        return statusText.includes(String(value).toLowerCase());
       },
     },
     {
