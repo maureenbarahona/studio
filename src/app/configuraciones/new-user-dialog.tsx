@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/select';
 import type {User} from '@/lib/types';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useState} from 'react';
+import {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {useToast} from '@/hooks/use-toast';
@@ -45,46 +45,72 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-interface NewUserDialogProps {
+interface UserDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddUser: (user: Omit<User, 'id'>) => void;
+  onSaveUser: (user: User) => void;
+  user?: User | null;
 }
 
-export function NewUserDialog({
+export function UserDialog({
   open,
   onOpenChange,
-  onAddUser,
-}: NewUserDialogProps) {
+  onSaveUser,
+  user,
+}: UserDialogProps) {
   const {toast} = useToast();
+  const isEditMode = !!user;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      role: 'agent',
-      status: 'active',
-    },
   });
 
+  useEffect(() => {
+    if (user && open) {
+      form.reset(user);
+    } else if (!user && open) {
+      form.reset({
+        name: '',
+        email: '',
+        role: 'agent',
+        status: 'active',
+      });
+    }
+  }, [user, open, form]);
+
   function onSubmit(data: FormValues) {
-    onAddUser(data);
+    const userToSave: User = {
+      ...data,
+      id: user?.id || `user-${Date.now()}`,
+    };
+    onSaveUser(userToSave);
+    
     toast({
-      title: 'Usuario Creado',
-      description: `El usuario ${data.name} ha sido añadido con éxito.`,
+      title: isEditMode ? 'Usuario Actualizado' : 'Usuario Creado',
+      description: `El usuario ${data.name} ha sido guardado con éxito.`,
     });
     onOpenChange(false);
-    form.reset();
   }
+  
+  const handleDialogChange = (isOpen: boolean) => {
+    onOpenChange(isOpen);
+    if (!isOpen) {
+      form.reset();
+    }
+  };
+
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Añadir Nuevo Usuario</DialogTitle>
+          <DialogTitle>
+            {isEditMode ? 'Editar Usuario' : 'Añadir Nuevo Usuario'}
+          </DialogTitle>
           <DialogDescription>
-            Complete los campos para crear un nuevo usuario.
+            {isEditMode
+              ? 'Modifique los campos para actualizar el usuario.'
+              : 'Complete los campos para crear un nuevo usuario.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -123,7 +149,7 @@ export function NewUserDialog({
                   <FormLabel>Rol</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -139,7 +165,7 @@ export function NewUserDialog({
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="status"
               render={({field}) => (
@@ -147,7 +173,7 @@ export function NewUserDialog({
                   <FormLabel>Estado</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -167,7 +193,7 @@ export function NewUserDialog({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => handleDialogChange(false)}
               >
                 Cancelar
               </Button>
