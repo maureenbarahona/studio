@@ -46,4 +46,5 @@ export interface User {
   name: string;
   email: string;
   role: 'admin' | 'agent';
+  status: 'active' | 'inactive';
 }

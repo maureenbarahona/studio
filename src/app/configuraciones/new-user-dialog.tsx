@@ -38,6 +38,9 @@ const formSchema = z.object({
   role: z.enum(['admin', 'agent'], {
     required_error: 'Debe seleccionar un rol.',
   }),
+  status: z.enum(['active', 'inactive'], {
+    required_error: 'Debe seleccionar un estado.',
+  }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -61,6 +64,7 @@ export function NewUserDialog({
       name: '',
       email: '',
       role: 'agent',
+      status: 'active',
     },
   });
 
@@ -129,6 +133,30 @@ export function NewUserDialog({
                     <SelectContent>
                       <SelectItem value="admin">Administrador</SelectItem>
                       <SelectItem value="agent">Agente</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="status"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Estado</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccione un estado" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="active">Activo</SelectItem>
+                      <SelectItem value="inactive">Inactivo</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

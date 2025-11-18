@@ -7,8 +7,8 @@ import type {
 } from './types';
 
 export const users: User[] = [
-  {id: 'user1', name: 'Yaneth Garcia', email: 'admin@comercialyaneth.com', role: 'admin'},
-  {id: 'user2', name: 'Agente Norte', email: 'agente.norte@comercialyaneth.com', role: 'agent'},
+  {id: 'user1', name: 'Yaneth Garcia', email: 'admin@comercialyaneth.com', role: 'admin', status: 'active'},
+  {id: 'user2', name: 'Agente Norte', email: 'agente.norte@comercialyaneth.com', role: 'agent', status: 'active'},
 ];
 
 export const transactionStatuses: TransactionStatus[] = [

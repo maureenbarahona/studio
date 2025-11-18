@@ -34,7 +34,19 @@ const columns: ColumnDef<User>[] = [
       const role = row.getValue('role') as string;
       return (
         <Badge variant={role === 'admin' ? 'default' : 'secondary'}>
-          {role}
+          {role === 'admin' ? 'Administrador' : 'Agente'}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: 'status',
+    header: 'Estado',
+    cell: ({row}) => {
+      const status = row.getValue('status') as string;
+      return (
+        <Badge variant={status === 'active' ? 'default' : 'destructive'}>
+          {status === 'active' ? 'Activo' : 'Inactivo'}
         </Badge>
       );
     },
