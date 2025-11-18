@@ -9,11 +9,13 @@ import type {
 import type { Country } from './config-types';
 
 export const userRoles: UserRole[] = [
+  {id: 'role0', name: 'Superadmin', description: 'Acceso total y configuración de empresas.'},
   {id: 'role1', name: 'Administrador', description: 'Acceso total al sistema.'},
   {id: 'role2', name: 'Agente', description: 'Acceso limitado para operaciones diarias.'},
 ];
 
 export const users: User[] = [
+  {id: 'user0', name: 'Super Admin', email: 'superadmin@email.com', role: 'role0', status: 'active', password: 'superpassword'},
   {id: 'user1', name: 'Yaneth Garcia', email: 'admin@comercialyaneth.com', role: 'role1', status: 'active', password: 'QwErT123'},
   {id: 'user2', name: 'Agente Norte', email: 'agente.norte@comercialyaneth.com', role: 'role2', status: 'active', password: 'password123'},
 ];

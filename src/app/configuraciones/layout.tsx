@@ -16,10 +16,13 @@ import {
   Map,
 } from 'lucide-react';
 import PageHeader from '@/components/page-header';
+import { useAuth } from '@/components/auth-provider';
+import { userRoles } from '@/lib/data';
 
 const sidebarNavItems = [
   {
     title: 'General',
+    requiredRole: 'Superadmin',
     items: [
       {
         title: 'Empresa',
@@ -86,6 +89,8 @@ interface SettingsLayoutProps {
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const userRole = userRoles.find((role) => role.id === user?.role);
 
   return (
     <div className="flex flex-col gap-8">
@@ -96,30 +101,35 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
         <aside className="lg:w-1/5">
           <nav className="flex flex-col space-y-4">
-            {sidebarNavItems.map((group) => (
-              <div key={group.title}>
-                <h4 className="mb-2 text-sm font-semibold text-muted-foreground">
-                  {group.title}
-                </h4>
-                <div className="flex flex-col space-y-1">
-                  {group.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
-                        pathname === item.href
-                          ? 'bg-accent text-accent-foreground'
-                          : 'text-muted-foreground'
-                      )}
-                    >
-                      {item.icon}
-                      {item.title}
-                    </Link>
-                  ))}
+            {sidebarNavItems.map((group) => {
+              const hasAccess = !group.requiredRole || userRole?.name === group.requiredRole;
+              if (!hasAccess) return null;
+
+              return (
+                <div key={group.title}>
+                  <h4 className="mb-2 text-sm font-semibold text-muted-foreground">
+                    {group.title}
+                  </h4>
+                  <div className="flex flex-col space-y-1">
+                    {group.items.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                          'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
+                          pathname === item.href
+                            ? 'bg-accent text-accent-foreground'
+                            : 'text-muted-foreground'
+                        )}
+                      >
+                        {item.icon}
+                        {item.title}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </nav>
         </aside>
         <div className="flex-1">{children}</div>
