@@ -88,9 +88,6 @@ export function UsersTable() {
               <DropdownMenuItem onClick={() => handleOpenDialog(user)}>
                 Editar
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive focus:text-destructive">
-                Eliminar
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
